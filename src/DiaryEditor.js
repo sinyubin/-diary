@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 const DiaryEditor = () => {
+  //useRef  = > HTML DOM요소에 접근할 수 있게 해줌
+  const authorInput = useRef();
+  const contnetInput = useRef();
   //useState의 두가지 방법
   const [state, setState] = useState({
     author: "",
@@ -17,7 +20,17 @@ const DiaryEditor = () => {
     });
   };
   const handleSubmit = () => {
-    console.log(state);
+    if (state.author.length < 1) {
+      // alert("작성자는 최소 1글자 이상 입력해주세요");
+      //focus 현재 authorInput 태그에 focus를 주는것
+      authorInput.current.focus();
+      return;
+    }
+    if (state.content.length < 5) {
+      // alert("작성자는 최소 5글자 이상 입력해주세요");
+      contnetInput.current.focus();
+      return;
+    }
     alert("저장 완료");
   };
   return (
@@ -25,6 +38,7 @@ const DiaryEditor = () => {
       <h2>오늘의 일기</h2>
       <div>
         <Input
+          ref={authorInput}
           value={state.author}
           name="author"
           onChange={(e) => {
@@ -42,6 +56,7 @@ const DiaryEditor = () => {
       </div>
       <div>
         <Textarea
+          ref={contnetInput}
           value={state.content}
           name="content"
           onChange={(e) => {

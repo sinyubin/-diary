@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
-const DiaryEditor = () => {
+const DiaryEditor = ({ onCreate }) => {
   //useRef  = > HTML DOM요소에 접근할 수 있게 해줌
   const authorInput = useRef();
   const contnetInput = useRef();
@@ -8,7 +8,7 @@ const DiaryEditor = () => {
   const [state, setState] = useState({
     author: "",
     content: "",
-    emoion: 1,
+    emotion: 1,
   });
   // const [author, setAuthor] = useState("");
   // const [content, setContent] = useState("");
@@ -31,7 +31,15 @@ const DiaryEditor = () => {
       contnetInput.current.focus();
       return;
     }
+
+    onCreate(state.author, state.content, state.emotion);
     alert("저장 완료");
+
+    setState({
+      author: "",
+      content: "",
+      emotion: 1,
+    });
   };
   return (
     <Editor>

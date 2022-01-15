@@ -8,7 +8,7 @@ const DiaryItem = (e) => {
           작성자:{e.author} | 감정 점수:{e.emtion}
         </span>
         <br />
-        <DateDay>{new Date(e.created_data).toLocaleString()}</DateDay>
+        <DateDay>{new Date(e.created_date).toLocaleString()}</DateDay>
       </Info>
 
       <Content>{e.content}</Content>

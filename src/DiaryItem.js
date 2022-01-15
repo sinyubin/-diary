@@ -12,6 +12,14 @@ const DiaryItem = (e) => {
       </Info>
 
       <Content>{e.content}</Content>
+      <button
+        onClick={() => {
+          console.log(e.id);
+          if (window.confirm(`${e.id}번째 일기를 정말 삭제하시겠습니까?`)) {
+            e.onDelete(e.id);
+          }
+        }}
+      >삭제하기</button>
     </All>
   );
 };

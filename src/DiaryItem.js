@@ -1,6 +1,17 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 const DiaryItem = (e) => {
+  // 수정
+  const [isEdit, setIsEdit] = useState(false);
+  const toggleIsEdit = () => setIsEdit(!isEdit);
+  const [localContent, setLocalContent] = useState("");
+  //삭제버튼
+  const handleDelete = () => {
+    if (window.confirm(`${e.id}번째 일기를 정말 삭제하시겠습니까?`)) {
+      e.onDelete(e.id);
+    }
+  };
   return (
     <All>
       <Info>
@@ -11,15 +22,22 @@ const DiaryItem = (e) => {
         <DateDay>{new Date(e.created_date).toLocaleString()}</DateDay>
       </Info>
 
-      <Content>{e.content}</Content>
-      <button
-        onClick={() => {
-          console.log(e.id);
-          if (window.confirm(`${e.id}번째 일기를 정말 삭제하시겠습니까?`)) {
-            e.onDelete(e.id);
-          }
-        }}
-      >삭제하기</button>
+      <Content>
+        {isEdit ? (
+          <>
+            <textarea
+              value={localContent}
+              onChange={(e) => {
+                setLocalContent(e.target.value);
+              }}
+            />
+          </>
+        ) : (
+          <>{e.content}</>
+        )}
+      </Content>
+      <button onClick={handleDelete}>삭제하기</button>
+      <button onClick={toggleIsEdit}>수정하기</button>
     </All>
   );
 };

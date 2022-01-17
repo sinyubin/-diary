@@ -53,10 +53,17 @@ function App() {
     const newList = data.filter((e) => e.id !== targetId);
     setData(newList);
   };
+
+  //수정 완료
+  const onEdit = (targetId, newContent) => {
+    setData(
+      data.map((e) => (e.id === targetId ? { ...e, content: newContent } : e))
+    );
+  };
   return (
     <div className="App">
       <DiaryEditor onCreate={onCreate} />
-      <DiaryList onDelete={onDelete} diaryList={data} />
+      <DiaryList onEdit={onEdit} onDelete={onDelete} diaryList={data} />
     </div>
   );
 }

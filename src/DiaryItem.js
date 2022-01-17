@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
 const DiaryItem = (e) => {
   // 수정
   const [isEdit, setIsEdit] = useState(false);
   const toggleIsEdit = () => setIsEdit(!isEdit);
-  const [localContent, setLocalContent] = useState("");
+  const [localContent, setLocalContent] = useState(e.content);
+  const localContentInput = useRef();
   //삭제버튼
   const handleDelete = () => {
     if (window.confirm(`${e.id}번째 일기를 정말 삭제하시겠습니까?`)) {
       e.onDelete(e.id);
+    }
+  };
+
+  //수정 취소
+  const handleQuitEdit = () => {
+    setIsEdit(false);
+    setLocalContent(e.content);
+  };
+
+  //수정 완료
+  const handleEdit = () => {
+    if (localContent.length < 5) {
+      localContentInput.current.focus();
+      return;
+    }
+
+    if (window.confirm(`${e.id}번째 일기를 수정하시겠습니까?`)) {
+      e.onEdit(e.id, localContent);
+      toggleIsEdit();
     }
   };
   return (
@@ -26,6 +46,7 @@ const DiaryItem = (e) => {
         {isEdit ? (
           <>
             <textarea
+              ref={localContentInput}
               value={localContent}
               onChange={(e) => {
                 setLocalContent(e.target.value);
@@ -36,8 +57,17 @@ const DiaryItem = (e) => {
           <>{e.content}</>
         )}
       </Content>
-      <button onClick={handleDelete}>삭제하기</button>
-      <button onClick={toggleIsEdit}>수정하기</button>
+      {isEdit ? (
+        <>
+          <button onClick={handleQuitEdit}>수정 취소</button>
+          <button onClick={handleEdit}>수정 완료</button>
+        </>
+      ) : (
+        <>
+          <button onClick={handleDelete}>삭제하기</button>
+          <button onClick={toggleIsEdit}>수정하기</button>
+        </>
+      )}
     </All>
   );
 };

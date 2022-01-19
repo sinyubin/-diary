@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
@@ -28,7 +28,32 @@ import Lifecycle from "./Lifecycle";
 //   },
 // ];
 
+//https://jsonplaceholder.typicode.com/comments
 function App() {
+  //api
+  const getData = async () => {
+    const res = await fetch(
+      "https://jsonplaceholder.typicode.com/comments"
+    ).then((res) => res.json());
+
+    const initData = res.slice(0, 20).map((e) => {
+      return {
+        author: e.email,
+        content: e.body,
+        emotion: Math.floor(Math.random() * 5) + 1,
+        created_date: new Date().getTime(),
+        id: dataId.current++,
+      };
+    });
+
+    setData(initData);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      getData();
+    }, 1500);
+  }, []);
   //일기 데이터 저장
   const [data, setData] = useState([]);
 
@@ -61,10 +86,28 @@ function App() {
       data.map((e) => (e.id === targetId ? { ...e, content: newContent } : e))
     );
   };
+
+  //감정 비율
+  //useMemo를 이용해서 이미 계산한 연산결과를 기억해서 동일한 결과일시 다시 연산x,데치터 반환
+  //[]이부분만이 바뀌면 다시 실행
+  const getDiaryAnalysis = useMemo(() => {
+    console.log("일기 분석 시작");
+
+    const goodCount = data.filter((e) => e.emotion >= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+    return { goodCount, badCount, goodRatio };
+  }, [data.length]);
+
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
   return (
     <div className="App">
       <Lifecycle />
       <DiaryEditor onCreate={onCreate} />
+      <div>전체 일기 :{data.length}</div>
+      <div>기분 좋은 일기 개수:{goodCount}</div>
+      <div>기분 안좋은 일기 개수:{badCount}</div>
+      <div>기분 좋은 일기 비율:{goodRatio}</div>
       <DiaryList onEdit={onEdit} onDelete={onDelete} diaryList={data} />
     </div>
   );

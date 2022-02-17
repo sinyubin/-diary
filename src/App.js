@@ -88,8 +88,10 @@ function App() {
   };
 
   //감정 비율
+  //함수 연산 최적화
   //useMemo를 이용해서 이미 계산한 연산결과를 기억해서 동일한 결과일시 다시 연산x,데치터 반환
   //[]이부분만이 바뀌면 다시 실행
+  //useMemo는 함수가 아니라 값을 return한다
   const getDiaryAnalysis = useMemo(() => {
     console.log("일기 분석 시작");
 
